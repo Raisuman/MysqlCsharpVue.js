@@ -1,0 +1,44 @@
+﻿@model WebApplication4.Entities.Cviky
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Cviky</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CvikyId" />
+            <div class="form-group">
+                <label asp-for="DruhCviku" class="control-label"></label>
+                <input asp-for="DruhCviku" class="form-control" />
+                <span asp-validation-for="DruhCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CasCviku" class="control-label"></label>
+                <input asp-for="CasCviku" class="form-control" />
+                <span asp-validation-for="CasCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DenCviku" class="control-label"></label>
+                <input asp-for="DenCviku" class="form-control" />
+                <span asp-validation-for="DenCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

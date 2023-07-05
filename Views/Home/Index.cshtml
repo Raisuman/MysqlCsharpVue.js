@@ -1,0 +1,98 @@
+﻿@model List<WebApplication4.Entities.Cviky>
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                cviky: @Html.Raw(Json.Serialize(Model)),
+                newCviky: {
+                    cvikyId: '',
+                    druhCviku: '',                   
+                    denCviky: ''
+                },
+            },
+            methods: {
+                addCviky() {
+                    this.newCviky.editing = true;
+                    this.newCviky.cvikyId = this.cviky.length + 1;                     // Set the editing property for the new item
+                    this.cviky.push(this.newCviky);
+                    this.newCviky = {
+                        cvikyId: '',
+                        druhCviku: '',                      
+                        denCviky: ''
+                    };
+                },
+                removeCviky(index) {
+                    this.cviky.splice(index, 1);
+
+                    for (let i = 0; i < this.cviky.length; i++) {
+                        this.cviky[i].cvikyId = i + 1;
+                    }
+                },
+                editCviky(cvikie) {
+                    cvikie.editing = true;
+                    this.$set(this.cviky, this.cviky.indexOf(cvikie), cvikie);
+                },
+                saveCviky(cvikie) {
+                    cvikie.editing = false;
+                    this.$set(this.cviky, this.cviky.indexOf(cvikie), cvikie);
+                },
+                formatDateInput(cvikie) {
+                    const formattedDate = cvikie.denCviku.split('T')[0];
+                    this.$set(cvikie, 'denCviku', formattedDate);
+                }
+            },
+            mounted() {
+                console.log(this.cviky); // Display the cviky data in the browser console
+            }
+        });
+    </script>
+}
+
+   
+
+    <div id="app">
+        <h1>Data List</h1>
+        <table border='1' width='80%' style='border-collapse: collapse;'>   
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Druh</th>
+                    <th>Čas</th>
+                    <th>Den</th>                   
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(cvikie, index) in cviky" :key="cvikie.cvikyId">
+                    <td v-if="!cvikie.editing"> {{ cvikie.cvikyId }} </td>
+                    <td v-if="!cvikie.editing"> {{ cvikie.druhCviku }} </td>
+                    <td v-if="!cvikie.editing"> {{ cvikie.casCviku }} </td>
+                    <td v-if="!cvikie.editing" :value="formatDateInput(cvikie)"> {{ cvikie.denCviku }} </td>
+
+                    <td v-if="cvikie.editing"><input type="number" v-model="cvikie.cvikyId"></td>
+                    <td v-if="cvikie.editing"><input type="text" v-model="cvikie.druhCviku"></td>
+                    <td v-if="cvikie.editing"><input type="time" v-model="cvikie.casCviku" step="2"></td>
+                    <td v-if="cvikie.editing"><input type="date"  v-model="cvikie.denCviku"></td>
+
+                    <td>
+                        <button v-if="!cvikie.editing" class="edit-button" v-on:click="editCviky(cvikie)">Edit</button>
+                        <button v-if="cvikie.editing" class="save-button" v-on:click="saveCviky(cvikie)">Save</button>
+                        <button class="delete-button" v-on:click="removeCviky(index)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button v-on:click="addCviky" class="add-button">Add Row</button>
+    </div>
+
